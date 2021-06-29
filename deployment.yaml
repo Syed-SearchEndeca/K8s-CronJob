@@ -1,0 +1,26 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: hello-job
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            role: blog
+        spec:
+          containers:
+          - name: hello-job
+            image: 'bitnami/kubectl:1.12'
+            command: ["/scripts/hello.ksh"]
+            volumeMounts:
+            - name: hello
+              mountPath: /scripts
+          restartPolicy: Never
+          volumes:
+          - name: hello
+            configMap:
+              name: hello
+              defaultMode: 0777
